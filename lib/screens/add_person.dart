@@ -39,29 +39,31 @@ class _AddPersonState extends ConsumerState<AddPerson> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: nameController,
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onBackground,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              TextField(
+                controller: nameController,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onBackground,
+                ),
+                decoration: const InputDecoration(
+                  labelText: 'Name',
+                ),
               ),
-              decoration: const InputDecoration(
-                labelText: 'Name',
+              const SizedBox(
+                height: 20,
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            // add box to add image
-            SelectedQr(
-                onPickImage: (image) {
-                  _selectedImage = image;
-                },
-                oldImage: _selectedImage),
-          ],
+              // add box to add image
+              SelectedQr(
+                  onPickImage: (image) {
+                    _selectedImage = image;
+                  },
+                  oldImage: _selectedImage),
+            ],
+          ),
         ),
       ),
     );

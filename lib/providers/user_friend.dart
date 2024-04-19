@@ -9,15 +9,13 @@ class UserFriendNotifier extends StateNotifier<List<People>> {
   }
 
   void editUser(People updateuser) {
-    // print(updateuser.id);
-    // print(updateuser.name);
     state = state
         .map((user) => user.id == updateuser.id ? updateuser : user)
         .toList();
-    // for (final user in state) {
-    //   print(user.name);
-    //   print(user.id);
-    // }
+  }
+
+  void deleteUser(People user) {
+    state = state.where((element) => element.id != user.id).toList();
   }
 }
 

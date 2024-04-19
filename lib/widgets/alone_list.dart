@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_group/models/people.dart';
+import 'package:qr_group/providers/user_friend.dart';
 import 'package:qr_group/screens/add_person.dart';
 import 'package:qr_group/screens/qr.dart';
 
-class AloneList extends StatefulWidget {
+class AloneList extends ConsumerStatefulWidget {
   final List<People> people;
   const AloneList({super.key, required this.people});
 
   @override
-  State<AloneList> createState() => _AloneListState();
+  ConsumerState<AloneList> createState() => _AloneListState();
 }
 
-class _AloneListState extends State<AloneList> {
+class _AloneListState extends ConsumerState<AloneList> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -59,9 +61,9 @@ class _AloneListState extends State<AloneList> {
                       IconButton(
                         icon: const Icon(Icons.delete),
                         onPressed: () {
-                          setState(() {
-                            widget.people.removeAt(index);
-                          });
+                          ref
+                              .read(userFriendProvider.notifier)
+                              .deleteUser(widget.people[index]);
                         },
                       ),
                     ],
