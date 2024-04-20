@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:qr_group/models/people.dart';
 
 class QrScreen extends StatelessWidget {
-  final People people;
-  const QrScreen({super.key, required this.people});
+  final Qrcode qrcodeDetails;
+  const QrScreen({super.key, required this.qrcodeDetails});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +28,7 @@ class QrScreen extends StatelessWidget {
                 ),
               ),
               child: Image.file(
-                people.image,
+                qrcodeDetails.image,
                 fit: BoxFit.fill,
                 width: double.infinity,
                 height: double.infinity,
@@ -48,7 +48,7 @@ class QrScreen extends StatelessWidget {
             height: 10,
           ),
           Text(
-            people.name,
+            qrcodeDetails.name,
             style: Theme.of(context).textTheme.titleLarge!.copyWith(
                   color: Theme.of(context).colorScheme.onBackground,
                 ),

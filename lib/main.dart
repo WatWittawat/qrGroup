@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:qr_group/screens/alone.dart';
+import 'package:qr_group/screens/friend.dart';
 
 final colorScheme = ColorScheme.fromSeed(
   brightness: Brightness.dark,
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'QR Group',
       theme: theme,
-      home: const AloneScreen(),
+      home: const FriendsScreen(),
     );
   }
 }

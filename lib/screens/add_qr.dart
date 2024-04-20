@@ -6,14 +6,15 @@ import 'package:qr_group/models/people.dart';
 import 'package:qr_group/providers/user_friend.dart';
 import 'package:qr_group/widgets/selected_qr.dart';
 
-class AddPerson extends ConsumerStatefulWidget {
-  final People? personToEdit;
-  const AddPerson({super.key, this.personToEdit});
+class AddQrcode extends ConsumerStatefulWidget {
+  final Qrcode? personToEdit;
+  final People user;
+  const AddQrcode({super.key, required this.user, this.personToEdit});
   @override
-  ConsumerState<AddPerson> createState() => _AddPersonState();
+  ConsumerState<AddQrcode> createState() => _AddQrcode();
 }
 
-class _AddPersonState extends ConsumerState<AddPerson> {
+class _AddQrcode extends ConsumerState<AddQrcode> {
   var nameController = TextEditingController();
   File? _selectedImage;
   @override
@@ -29,13 +30,15 @@ class _AddPersonState extends ConsumerState<AddPerson> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.personToEdit != null ? 'Edit Person' : 'Add Person',
+          widget.personToEdit != null
+              ? "Edit Qr Code : [ ${widget.personToEdit?.name} ]"
+              : "Add Qr Code : [ ${widget.user.name} ]",
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.save_as_outlined),
             iconSize: 30,
-            onPressed: widget.personToEdit == null ? _saveUser : _editUser,
+            onPressed: widget.personToEdit == null ? _saveQrcode : _editQrcode,
           ),
         ],
       ),
@@ -75,27 +78,33 @@ class _AddPersonState extends ConsumerState<AddPerson> {
     super.dispose();
   }
 
-  void _saveUser() {
-    final name = nameController.text.trim();
-    if (name.isEmpty || _selectedImage == null) {
+  void _saveQrcode() {
+    final name = nameController.text;
+    final image = _selectedImage;
+    if (name.isEmpty || image == null) {
       return;
     }
-    final user = People(name: name, image: _selectedImage!);
-    ref.read(userFriendProvider.notifier).addUser(user);
+    final newQr = Qrcode(
+      name: name,
+      image: image,
+    );
+    ref.read(userFriendProvider.notifier).addQrcode(widget.user, newQr);
     Navigator.of(context).pop();
   }
 
-  void _editUser() {
-    final name = nameController.text.trim();
-    if (name.isEmpty || _selectedImage == null) {
+  void _editQrcode() {
+    final name = nameController.text;
+    final image = _selectedImage;
+    if (name.isEmpty || image == null) {
       return;
     }
-    final user = People(
-      id: widget.personToEdit!.id,
+    final myid = widget.personToEdit!.id;
+    final newQr = Qrcode(
+      id: myid,
       name: name,
-      image: _selectedImage!,
+      image: image,
     );
-    ref.read(userFriendProvider.notifier).editUser(user);
+    ref.read(userFriendProvider.notifier).editQrcode(widget.user, newQr);
     Navigator.of(context).pop();
   }
 }

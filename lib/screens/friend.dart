@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_group/providers/user_friend.dart';
-import 'package:qr_group/screens/add_person.dart';
-import 'package:qr_group/widgets/alone_list.dart';
+import 'package:qr_group/screens/add_friend.dart';
+import 'package:qr_group/screens/group.dart';
+import 'package:qr_group/widgets/friends_list.dart';
+import 'package:qr_group/widgets/main_drawer.dart';
 
-class AloneScreen extends ConsumerStatefulWidget {
-  const AloneScreen({super.key});
+class FriendsScreen extends ConsumerStatefulWidget {
+  const FriendsScreen({super.key});
   @override
-  ConsumerState<AloneScreen> createState() {
-    return _AloneScreenState();
+  ConsumerState<FriendsScreen> createState() {
+    return _FriendsScreenState();
   }
 }
 
-class _AloneScreenState extends ConsumerState<AloneScreen> {
+class _FriendsScreenState extends ConsumerState<FriendsScreen> {
   @override
   Widget build(BuildContext context) {
     final userList = ref.watch(userFriendProvider);
-    // for (final user in userList) {
-    //   print(user.name);
-    // }
     return Scaffold(
+      drawer: MainDrawer(
+        onSelectScreen: _selectScreen,
+      ),
       appBar: AppBar(
-        title: const Text('Alone'),
+        title: const Text('Friends'),
         actions: [
           IconButton(
             icon: const Icon(
@@ -30,7 +32,7 @@ class _AloneScreenState extends ConsumerState<AloneScreen> {
             ),
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (ctx) => const AddPerson()),
+                MaterialPageRoute(builder: (ctx) => const AddFriend()),
               );
             },
           ),
@@ -39,17 +41,24 @@ class _AloneScreenState extends ConsumerState<AloneScreen> {
       body: userList.isEmpty
           ? Center(
               child: Text(
-              "No people. Pls add.",
+              "No friends. Please add.",
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     color: Theme.of(context).colorScheme.onBackground,
                   ),
             ))
           : Padding(
               padding: const EdgeInsets.only(top: 16.0),
-              child: AloneList(
-                people: userList,
-              ),
+              child: FriendsList(userList: userList),
             ),
     );
+  }
+
+  void _selectScreen(String identifier) {
+    Navigator.of(context).pop();
+    if (identifier == 'groups') {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (ctx) => const GroupScreen()),
+      );
+    }
   }
 }
