@@ -21,14 +21,15 @@ class Qrcode {
       : id = id ?? uuid.v4();
 }
 
-class ListGroup {
+class Group {
   String? id;
   final String name;
-  final List<People> people;
+  List<People>? people;
 
-  ListGroup({
-    required this.people,
+  Group({
     required this.name,
+    List<People>? listpeople,
     String? id,
-  }) : id = id ?? uuid.v4();
+  })  : id = id ?? uuid.v4(),
+        people = listpeople ?? [];
 }

@@ -8,8 +8,10 @@ import 'package:qr_group/widgets/selected_qr.dart';
 
 class AddQrcode extends ConsumerStatefulWidget {
   final Qrcode? personToEdit;
+  final bool isEdit;
   final People user;
-  const AddQrcode({super.key, required this.user, this.personToEdit});
+  const AddQrcode(
+      {super.key, required this.user, this.personToEdit, this.isEdit = false});
   @override
   ConsumerState<AddQrcode> createState() => _AddQrcode();
 }
@@ -35,11 +37,14 @@ class _AddQrcode extends ConsumerState<AddQrcode> {
               : "Add Qr Code : [ ${widget.user.name} ]",
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.save_as_outlined),
-            iconSize: 30,
-            onPressed: widget.personToEdit == null ? _saveQrcode : _editQrcode,
-          ),
+          widget.isEdit
+              ? const SizedBox()
+              : IconButton(
+                  icon: const Icon(Icons.save_as_outlined),
+                  iconSize: 30,
+                  onPressed:
+                      widget.personToEdit == null ? _saveQrcode : _editQrcode,
+                ),
         ],
       ),
       body: SingleChildScrollView(
@@ -49,6 +54,7 @@ class _AddQrcode extends ConsumerState<AddQrcode> {
             children: [
               TextField(
                 controller: nameController,
+                maxLength: 19,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onBackground,
                 ),

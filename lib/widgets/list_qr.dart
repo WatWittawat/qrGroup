@@ -7,7 +7,8 @@ import 'package:qr_group/screens/qr.dart';
 
 class ListQr extends ConsumerStatefulWidget {
   final People user;
-  const ListQr({super.key, required this.user});
+  final bool isGroup;
+  const ListQr({super.key, required this.user, this.isGroup = false});
 
   @override
   ConsumerState<ListQr> createState() => _ListQrScreen();
@@ -20,19 +21,21 @@ class _ListQrScreen extends ConsumerState<ListQr> {
       appBar: AppBar(
         title: Text("Qr Codes   :   [ ${widget.user.name} ] "),
         actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.add_circle_outline_outlined,
-              size: 30,
-            ),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (ctx) => AddQrcode(user: widget.user),
+          widget.isGroup
+              ? const SizedBox()
+              : IconButton(
+                  icon: const Icon(
+                    Icons.add_circle_outline_outlined,
+                    size: 30,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (ctx) => AddQrcode(user: widget.user),
+                      ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
         ],
       ),
       body: Consumer(builder: (context, watch, child) {
@@ -83,26 +86,31 @@ class _ListQrScreen extends ConsumerState<ListQr> {
                             width: 100,
                             child: Row(
                               children: [
-                                IconButton(
-                                  icon: const Icon(Icons.edit),
-                                  onPressed: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                          builder: (ctx) => AddQrcode(
-                                                user: widget.user,
-                                                personToEdit: qrCodes[index],
-                                              )),
-                                    );
-                                  },
-                                ),
-                                IconButton(
-                                    icon: const Icon(Icons.delete),
-                                    onPressed: () {
-                                      ref
-                                          .read(userFriendProvider.notifier)
-                                          .deleteQrcode(
-                                              widget.user, qrCodes[index]);
-                                    }),
+                                widget.isGroup
+                                    ? const SizedBox()
+                                    : IconButton(
+                                        icon: const Icon(Icons.edit),
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (ctx) => AddQrcode(
+                                                      user: widget.user,
+                                                      personToEdit:
+                                                          qrCodes[index],
+                                                    )),
+                                          );
+                                        },
+                                      ),
+                                widget.isGroup
+                                    ? const SizedBox()
+                                    : IconButton(
+                                        icon: const Icon(Icons.delete),
+                                        onPressed: () {
+                                          ref
+                                              .read(userFriendProvider.notifier)
+                                              .deleteQrcode(
+                                                  widget.user, qrCodes[index]);
+                                        }),
                               ],
                             ),
                           ),

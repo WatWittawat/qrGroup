@@ -5,7 +5,12 @@ import 'package:image_picker/image_picker.dart';
 
 class SelectedQr extends StatefulWidget {
   final File? oldImage;
-  const SelectedQr({super.key, required this.onPickImage, this.oldImage});
+  final bool isEdit;
+  const SelectedQr(
+      {super.key,
+      required this.onPickImage,
+      this.oldImage,
+      this.isEdit = false});
   final void Function(File image) onPickImage;
   @override
   State<SelectedQr> createState() {
@@ -48,16 +53,20 @@ class _SelectedQrState extends State<SelectedQr> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            TextButton.icon(
-              onPressed: _chooseImage,
-              icon: const Icon(Icons.photo_outlined),
-              label: const Text("Open Gallery"),
-            ),
-            TextButton.icon(
-              onPressed: _takePhoto,
-              icon: const Icon(Icons.camera_alt_outlined),
-              label: const Text("Open camera"),
-            ),
+            widget.isEdit
+                ? const SizedBox()
+                : TextButton.icon(
+                    onPressed: _chooseImage,
+                    icon: const Icon(Icons.photo_outlined),
+                    label: const Text("Open Gallery"),
+                  ),
+            widget.isEdit
+                ? const SizedBox()
+                : TextButton.icon(
+                    onPressed: _takePhoto,
+                    icon: const Icon(Icons.camera_alt_outlined),
+                    label: const Text("Open camera"),
+                  ),
           ],
         )
       ],

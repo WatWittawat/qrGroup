@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qr_group/models/people.dart';
+import 'package:qr_group/providers/group.dart';
 import 'package:qr_group/providers/user_friend.dart';
 import 'package:qr_group/screens/add_friend.dart';
 import 'package:qr_group/screens/group.dart';
@@ -7,7 +9,9 @@ import 'package:qr_group/widgets/friends_list.dart';
 import 'package:qr_group/widgets/main_drawer.dart';
 
 class FriendsScreen extends ConsumerStatefulWidget {
-  const FriendsScreen({super.key});
+  final bool isGroup;
+  final String? groupId;
+  const FriendsScreen({super.key, this.isGroup = false, this.groupId});
   @override
   ConsumerState<FriendsScreen> createState() {
     return _FriendsScreenState();
@@ -17,28 +21,49 @@ class FriendsScreen extends ConsumerStatefulWidget {
 class _FriendsScreenState extends ConsumerState<FriendsScreen> {
   @override
   Widget build(BuildContext context) {
-    final userList = ref.watch(userFriendProvider);
+    List<People> matchingUsers = [];
+    if (widget.isGroup) {
+      final group = ref.watch(groupProvider).firstWhere(
+            (group) => group.id == widget.groupId,
+          );
+
+      if (group.people != null) {
+        final allUsers = ref.watch(userFriendProvider);
+        matchingUsers = allUsers
+            .where(
+                (user) => group.people!.any((person) => person.id == user.id))
+            .toList();
+      }
+    } else {
+      matchingUsers = ref.watch(userFriendProvider);
+    }
     return Scaffold(
-      drawer: MainDrawer(
-        onSelectScreen: _selectScreen,
-      ),
-      appBar: AppBar(
-        title: const Text('Friends'),
-        actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.add_circle_outline_outlined,
-              size: 30,
+      drawer: widget.isGroup
+          ? null
+          : MainDrawer(
+              onSelectScreen: _selectScreen,
             ),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (ctx) => const AddFriend()),
-              );
-            },
-          ),
+      appBar: AppBar(
+        title: widget.isGroup
+            ? const Text("User in Group")
+            : const Text('Friends'),
+        actions: [
+          widget.isGroup
+              ? const SizedBox()
+              : IconButton(
+                  icon: const Icon(
+                    Icons.add_circle_outline_outlined,
+                    size: 30,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (ctx) => const AddFriend()),
+                    );
+                  },
+                ),
         ],
       ),
-      body: userList.isEmpty
+      body: matchingUsers.isEmpty
           ? Center(
               child: Text(
               "No friends. Please add.",
@@ -46,10 +71,7 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen> {
                     color: Theme.of(context).colorScheme.onBackground,
                   ),
             ))
-          : Padding(
-              padding: const EdgeInsets.only(top: 16.0),
-              child: FriendsList(userList: userList),
-            ),
+          : FriendsList(userList: matchingUsers, isGroup: widget.isGroup),
     );
   }
 
