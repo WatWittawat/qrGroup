@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_group/models/people.dart';
 import 'package:qr_group/providers/user_friend.dart';
 
 class AddFriend extends ConsumerStatefulWidget {
@@ -56,8 +55,7 @@ class _AddFriedScreenState extends ConsumerState<AddFriend> {
     if (name.isEmpty) {
       return;
     }
-    final newUser = People(name: name);
-    ref.read(userFriendProvider.notifier).addUser(newUser);
+    ref.read(userFriendProvider.notifier).addUser(name);
     Navigator.of(context).pop();
   }
 }

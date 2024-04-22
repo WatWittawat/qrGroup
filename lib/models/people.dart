@@ -1,35 +1,62 @@
-import 'dart:io';
-
+import 'package:hive/hive.dart';
 import 'package:uuid/uuid.dart';
+
+part 'people.g.dart';
 
 const uuid = Uuid();
 
+@HiveType(typeId: 1)
 class People {
+  @HiveField(0)
   final String name;
-  List<Qrcode>? qrCodes;
-  String? id;
-  People({required this.name, String? id, List<Qrcode>? qrCodes})
-      : id = id ?? uuid.v4(),
+
+  @HiveField(1)
+  List<Qrcode> qrCodes;
+
+  @HiveField(2)
+  final String id;
+
+  People({
+    required this.name,
+    List<Qrcode>? qrCodes,
+    String? id,
+  })  : id = id ?? uuid.v4(),
         qrCodes = qrCodes ?? [];
 }
 
+@HiveType(typeId: 2)
 class Qrcode {
+  @HiveField(0)
   final String name;
-  final File image;
-  String? id;
-  Qrcode({required this.name, required this.image, String? id})
-      : id = id ?? uuid.v4();
+
+  @HiveField(1)
+  final String imagePath;
+
+  @HiveField(2)
+  final String id;
+
+  Qrcode({
+    required this.name,
+    required this.imagePath,
+    String? id,
+  }) : id = id ?? uuid.v4();
 }
 
+@HiveType(typeId: 3)
 class Group {
-  String? id;
+  @HiveField(0)
   final String name;
-  List<People>? people;
+
+  @HiveField(1)
+  List<People> listpeople;
+
+  @HiveField(2)
+  final String id;
 
   Group({
     required this.name,
     List<People>? listpeople,
     String? id,
   })  : id = id ?? uuid.v4(),
-        people = listpeople ?? [];
+        listpeople = listpeople ?? [];
 }

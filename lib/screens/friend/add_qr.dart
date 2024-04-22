@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_group/models/people.dart';
@@ -24,7 +23,9 @@ class _AddQrcode extends ConsumerState<AddQrcode> {
     super.initState();
     nameController =
         TextEditingController(text: widget.personToEdit?.name ?? '');
-    _selectedImage = widget.personToEdit?.image;
+    _selectedImage = widget.personToEdit?.imagePath != null
+        ? File(widget.personToEdit!.imagePath)
+        : null;
   }
 
   @override
@@ -92,7 +93,7 @@ class _AddQrcode extends ConsumerState<AddQrcode> {
     }
     final newQr = Qrcode(
       name: name,
-      image: image,
+      imagePath: image.path,
     );
     ref.read(userFriendProvider.notifier).addQrcode(widget.user, newQr);
     Navigator.of(context).pop();
@@ -108,7 +109,7 @@ class _AddQrcode extends ConsumerState<AddQrcode> {
     final newQr = Qrcode(
       id: myid,
       name: name,
-      image: image,
+      imagePath: image.path,
     );
     ref.read(userFriendProvider.notifier).editQrcode(widget.user, newQr);
     Navigator.of(context).pop();

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:qr_group/models/people.dart';
 
@@ -28,7 +30,7 @@ class QrScreen extends StatelessWidget {
                 ),
               ),
               child: Image.file(
-                qrcodeDetails.image,
+                File(qrcodeDetails.imagePath),
                 fit: BoxFit.fill,
                 width: double.infinity,
                 height: double.infinity,

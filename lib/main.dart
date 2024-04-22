@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:qr_group/screens/friend.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:qr_group/models/people.dart';
+import 'package:qr_group/screens/friend/friend.dart';
 
 final colorScheme = ColorScheme.fromSeed(
   brightness: Brightness.dark,
@@ -25,7 +27,16 @@ final theme = ThemeData().copyWith(
   ),
 );
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  Hive.registerAdapter(PeopleAdapter());
+  Hive.registerAdapter(QrcodeAdapter());
+  Hive.registerAdapter(GroupAdapter());
+  await Hive.openBox<People>('people');
+  await Hive.openBox<Qrcode>('qrcode');
+  await Hive.openBox<Group>('group');
+
   runApp(
     const ProviderScope(
       child: MyApp(),

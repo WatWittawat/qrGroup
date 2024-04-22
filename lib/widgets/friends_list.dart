@@ -43,7 +43,7 @@ class _FriendsList extends ConsumerState<FriendsList> {
                   borderRadius: BorderRadius.circular(20)),
               title: Text(widget.userList[index].name),
               subtitle: Text(
-                  "Number of QR codes : ${widget.userList[index].qrCodes!.length.toString()}"),
+                  "Number of QR codes : ${widget.userList[index].qrCodes.length.toString()}"),
               trailing: SizedBox(
                 width: 100,
                 child: Row(
@@ -112,10 +112,9 @@ class _FriendsList extends ConsumerState<FriendsList> {
                 if (newName.isEmpty) {
                   return;
                 }
-                final copyOldUser =
-                    People(id: user.id, name: nameController.text);
                 ref.read(userFriendProvider.notifier).editUser(
-                      copyOldUser,
+                      user.id,
+                      newName,
                     );
                 Navigator.of(context).pop();
               },

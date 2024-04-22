@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qr_group/models/people.dart';
 import 'package:qr_group/providers/group.dart';
 
 class AddGroupScreen extends ConsumerStatefulWidget {
@@ -58,7 +57,7 @@ class _AddGroupState extends ConsumerState<AddGroupScreen> {
     if (nameGroup.text.isEmpty) {
       return;
     }
-    ref.read(groupProvider.notifier).addGroup(Group(name: nameGroup.text));
+    ref.read(groupProvider.notifier).addGroup(nameGroup.text);
     Navigator.of(context).pop();
   }
 }

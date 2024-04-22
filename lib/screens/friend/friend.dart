@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_group/models/people.dart';
 import 'package:qr_group/providers/group.dart';
 import 'package:qr_group/providers/user_friend.dart';
-import 'package:qr_group/screens/add_friend.dart';
-import 'package:qr_group/screens/group.dart';
+import 'package:qr_group/screens/friend/add_friend.dart';
+import 'package:qr_group/screens/group/group.dart';
 import 'package:qr_group/widgets/friends_list.dart';
 import 'package:qr_group/widgets/main_drawer.dart';
 
@@ -26,14 +26,11 @@ class _FriendsScreenState extends ConsumerState<FriendsScreen> {
       final group = ref.watch(groupProvider).firstWhere(
             (group) => group.id == widget.groupId,
           );
-
-      if (group.people != null) {
-        final allUsers = ref.watch(userFriendProvider);
-        matchingUsers = allUsers
-            .where(
-                (user) => group.people!.any((person) => person.id == user.id))
-            .toList();
-      }
+      final allUsers = ref.watch(userFriendProvider);
+      matchingUsers = allUsers
+          .where(
+              (user) => group.listpeople.any((person) => person.id == user.id))
+          .toList();
     } else {
       matchingUsers = ref.watch(userFriendProvider);
     }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_group/models/people.dart';
 import 'package:qr_group/providers/user_friend.dart';
-import 'package:qr_group/screens/add_qr.dart';
+import 'package:qr_group/screens/friend/add_qr.dart';
 import 'package:qr_group/screens/qr.dart';
 
 class ListQr extends ConsumerStatefulWidget {
@@ -44,7 +44,7 @@ class _ListQrScreen extends ConsumerState<ListQr> {
             .where((user) => user.id == widget.user.id)
             .first
             .qrCodes;
-        return qrCodes!.isEmpty
+        return qrCodes.isEmpty
             ? Center(
                 child: Text(
                   "No Qr Codes. Please add.",

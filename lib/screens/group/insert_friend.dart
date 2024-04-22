@@ -18,9 +18,9 @@ class _InsertFriendState extends ConsumerState<InsertFriend> {
   @override
   void initState() {
     super.initState();
-    if (widget.groupedit.people != null) {
-      for (var person in widget.groupedit.people!) {
-        selectedStatus[person.id!] = true;
+    if (widget.groupedit.listpeople.isNotEmpty) {
+      for (var person in widget.groupedit.listpeople) {
+        selectedStatus[person.id] = true;
       }
     }
   }
@@ -40,8 +40,13 @@ class _InsertFriendState extends ConsumerState<InsertFriend> {
         ],
       ),
       body: listfriend.isEmpty
-          ? const Center(
-              child: Text("No friends to add."),
+          ? Center(
+              child: Text(
+                "No friends to add. Please add friends first.",
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+              ),
             )
           : Padding(
               padding: const EdgeInsets.all(8.0),
@@ -56,7 +61,7 @@ class _InsertFriendState extends ConsumerState<InsertFriend> {
                     value: isSelected,
                     onChanged: (bool? value) {
                       setState(() {
-                        selectedStatus[person.id!] = value ?? false;
+                        selectedStatus[person.id] = value ?? false;
                       });
                     },
                   );
@@ -73,7 +78,10 @@ class _InsertFriendState extends ConsumerState<InsertFriend> {
         .where((person) => selectedStatus[person.id] ?? false)
         .map((person) => person)
         .toList();
-    groupNotifier.togglePersonInGroup(widget.groupedit.id!, selectedPeople);
+    groupNotifier.addUserInGroup(
+      widget.groupedit.id,
+      selectedPeople,
+    );
     Navigator.of(context).pop();
   }
 }

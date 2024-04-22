@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:qr_group/providers/user_friend.dart';
-import 'package:qr_group/screens/add_group.dart';
-import 'package:qr_group/screens/friend.dart';
+import 'package:qr_group/screens/group/add_group.dart';
+import 'package:qr_group/screens/friend/friend.dart';
 import 'package:qr_group/widgets/group_list.dart';
 import 'package:qr_group/widgets/main_drawer.dart';
 
