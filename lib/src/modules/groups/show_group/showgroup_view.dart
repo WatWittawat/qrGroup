@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qr_group/src/common/components/confirm_delete.dart';
+import 'package:qr_group/src/common/components/edit_name_dialog.dart';
 import 'package:qr_group/src/common/components/main_drawer.dart';
 import 'package:qr_group/src/data/models/group.dart';
 import 'package:qr_group/src/data/models/user.dart';
@@ -109,18 +111,31 @@ class _ShowGroupViewState extends ConsumerState<ShowGroupView> {
                                 );
                               },
                             ),
-                            IconButton(
-                              icon: const Icon(Icons.edit),
-                              onPressed: () {
-                                _editNameGroup(context, ref, group);
+                            EditNameDialog<Group>(
+                              ref: ref,
+                              item: group,
+                              title: "Edit Group Name",
+                              labelText: "New Group Name",
+                              onSave: (ref, group, newName) {
+                                ref
+                                    .read(Group.groupProvider.notifier)
+                                    .editNameGroup(
+                                      group.id,
+                                      newName,
+                                    );
                               },
                             ),
-                            IconButton(
-                              icon: const Icon(Icons.delete),
-                              onPressed: () {
-                                _checkDeletedGroup(context, ref, group.id);
-                              },
-                            ),
+                            ConfirmDeleteButton(
+                                context: context,
+                                ref: ref,
+                                dialogTitle: "Delete Group",
+                                dialogContent:
+                                    "Are you sure you want to delete this Group?",
+                                onDelete: () {
+                                  ref
+                                      .read(Group.groupProvider.notifier)
+                                      .deleteGroup(group.id);
+                                }),
                           ],
                         ),
                       ),
@@ -139,76 +154,6 @@ class _ShowGroupViewState extends ConsumerState<ShowGroupView> {
                 );
               },
             ),
-    );
-  }
-
-  void _checkDeletedGroup(BuildContext context, WidgetRef ref, String groupId) {
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        return AlertDialog(
-          title: const Text('Delete Group'),
-          content: const Text('Are you sure you want to delete this group?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                ref.read(Group.groupProvider.notifier).deleteGroup(groupId);
-                Navigator.of(context).pop();
-              },
-              child: const Text('Delete'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _editNameGroup(BuildContext context, WidgetRef ref, Group group) {
-    final TextEditingController nameController =
-        TextEditingController(text: group.name);
-
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        return AlertDialog(
-          title: const Text('Edit Group Name'),
-          content: TextField(
-            controller: nameController,
-            decoration: const InputDecoration(
-              labelText: 'New Group Name',
-            ),
-            maxLength: 19,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                final newName = nameController.text;
-                if (newName.isEmpty) {
-                  return;
-                }
-                ref.read(Group.groupProvider.notifier).editNameGroup(
-                      group.id,
-                      newName,
-                    );
-                Navigator.of(context).pop();
-              },
-              child: const Text('Save'),
-            ),
-          ],
-        );
-      },
     );
   }
 }

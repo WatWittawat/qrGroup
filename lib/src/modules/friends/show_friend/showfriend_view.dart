@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qr_group/src/common/components/confirm_delete.dart';
+import 'package:qr_group/src/common/components/edit_name_dialog.dart';
 import 'package:qr_group/src/common/components/main_drawer.dart';
 import 'package:qr_group/src/data/models/user.dart';
 import 'package:qr_group/src/modules/friends/add_friend/addfriend_view.dart';
@@ -105,20 +107,34 @@ class _ShowFriendsViewState extends ConsumerState<ShowFriendsView> {
                           children: [
                             widget.isGroup
                                 ? const SizedBox()
-                                : IconButton(
-                                    icon: const Icon(Icons.edit),
-                                    onPressed: () {
-                                      _editNameGroup(
-                                          context, ref, matchingUsers[index]);
+                                : EditNameDialog<User>(
+                                    ref: ref,
+                                    item: matchingUsers[index],
+                                    title: "Edit Friend Name",
+                                    labelText: "New Friend Name",
+                                    onSave: (ref, user, newName) {
+                                      ref
+                                          .read(
+                                              User.userFriendProvider.notifier)
+                                          .editUser(
+                                            user.id,
+                                            newName,
+                                          );
                                     },
                                   ),
                             widget.isGroup
                                 ? const SizedBox()
-                                : IconButton(
-                                    icon: const Icon(Icons.delete),
-                                    onPressed: () {
-                                      _checkDeletedUser(
-                                          context, ref, matchingUsers[index]);
+                                : ConfirmDeleteButton(
+                                    context: context,
+                                    ref: ref,
+                                    dialogTitle: "Delete Friend",
+                                    dialogContent:
+                                        "Are you sure you want to delete this friend?",
+                                    onDelete: () {
+                                      ref
+                                          .read(
+                                              User.userFriendProvider.notifier)
+                                          .deleteUser(matchingUsers[index]);
                                     }),
                           ],
                         ),
@@ -137,76 +153,6 @@ class _ShowFriendsViewState extends ConsumerState<ShowFriendsView> {
                 );
               },
             ),
-    );
-  }
-
-  void _editNameGroup(BuildContext context, WidgetRef ref, User user) {
-    final TextEditingController nameController =
-        TextEditingController(text: user.name);
-
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        return AlertDialog(
-          title: const Text('Edit Friend Name'),
-          content: TextField(
-            controller: nameController,
-            decoration: const InputDecoration(
-              labelText: 'New Friend Name',
-            ),
-            maxLength: 19,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                final newName = nameController.text;
-                if (newName.isEmpty) {
-                  return;
-                }
-                ref.read(User.userFriendProvider.notifier).editUser(
-                      user.id,
-                      newName,
-                    );
-                Navigator.of(context).pop();
-              },
-              child: const Text('Save'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void _checkDeletedUser(BuildContext context, WidgetRef ref, User user) {
-    showDialog(
-      context: context,
-      builder: (ctx) {
-        return AlertDialog(
-          title: const Text('Delete Friend'),
-          content: const Text('Are you sure you want to delete this friend?'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                ref.read(User.userFriendProvider.notifier).deleteUser(user);
-                Navigator.of(context).pop();
-              },
-              child: const Text('Delete'),
-            ),
-          ],
-        );
-      },
     );
   }
 }
