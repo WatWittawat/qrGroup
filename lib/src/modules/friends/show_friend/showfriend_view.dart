@@ -4,9 +4,7 @@ import 'package:qr_group/src/common/components/confirm_delete.dart';
 import 'package:qr_group/src/common/components/edit_name_dialog.dart';
 import 'package:qr_group/src/common/components/main_drawer.dart';
 import 'package:qr_group/src/data/models/user.dart';
-import 'package:qr_group/src/modules/friends/add_friend/addfriend_view.dart';
 import 'package:qr_group/src/modules/friends/show_friend/showfriend_viewmodel.dart';
-import 'package:qr_group/src/modules/qr/show_qr_list/showqrlist_view.dart';
 
 class ShowFriendsView extends ConsumerStatefulWidget {
   final bool isGroup;
@@ -53,10 +51,7 @@ class _ShowFriendsViewState extends ConsumerState<ShowFriendsView> {
                     size: 30,
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (ctx) => const AddFriendView()),
-                    );
+                    ShowFriendViewModel.navigatetoAddFriend(context: context);
                   },
                 ),
         ],
@@ -112,16 +107,13 @@ class _ShowFriendsViewState extends ConsumerState<ShowFriendsView> {
                                     item: matchingUsers[index],
                                     title: "Edit Friend Name",
                                     labelText: "New Friend Name",
-                                    onSave: (ref, user, newName) {
-                                      ref
-                                          .read(
-                                              User.userFriendProvider.notifier)
-                                          .editUser(
-                                            user.id,
-                                            newName,
-                                          );
-                                    },
-                                  ),
+                                    onSave: (ref, _, newName) {
+                                      ShowFriendViewModel.onSaveEditName(
+                                        ref: ref,
+                                        newName: newName,
+                                        user: matchingUsers[index],
+                                      );
+                                    }),
                             widget.isGroup
                                 ? const SizedBox()
                                 : ConfirmDeleteButton(
@@ -131,21 +123,19 @@ class _ShowFriendsViewState extends ConsumerState<ShowFriendsView> {
                                     dialogContent:
                                         "Are you sure you want to delete this friend?",
                                     onDelete: () {
-                                      ref
-                                          .read(
-                                              User.userFriendProvider.notifier)
-                                          .deleteUser(matchingUsers[index]);
+                                      ShowFriendViewModel.onDeleteUser(
+                                        ref: ref,
+                                        user: matchingUsers[index],
+                                      );
                                     }),
                           ],
                         ),
                       ),
                       onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (ctx) => ShowQrList(
-                                user: matchingUsers[index],
-                                isGroup: widget.isGroup),
-                          ),
+                        ShowFriendViewModel.navigateShowQrList(
+                          context: context,
+                          user: matchingUsers[index],
+                          isGroup: widget.isGroup,
                         );
                       },
                     ),
