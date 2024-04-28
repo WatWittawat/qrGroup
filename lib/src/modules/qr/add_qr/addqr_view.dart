@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_group/src/data/models/user.dart';
 import 'package:qr_group/src/modules/image_input/imageinput_view.dart';
+import 'package:qr_group/src/modules/qr/add_qr/addqr_viewmodel.dart';
 
 class AddQrView extends ConsumerStatefulWidget {
   final Qrcode? personToEdit;
@@ -42,8 +43,22 @@ class _AddQrViewState extends ConsumerState<AddQrView> {
               : IconButton(
                   icon: const Icon(Icons.save_as_outlined),
                   iconSize: 30,
-                  onPressed:
-                      widget.personToEdit == null ? _saveQrcode : _editQrcode,
+                  onPressed: () {
+                    widget.personToEdit == null
+                        ? AddQrViewModel.saveQrcode(
+                            context: context,
+                            nameController: nameController,
+                            selectedImage: _selectedImage,
+                            user: widget.user,
+                            ref: ref)
+                        : AddQrViewModel.editQrcode(
+                            context: context,
+                            nameController: nameController,
+                            selectedImage: _selectedImage,
+                            user: widget.user,
+                            personToEdit: widget.personToEdit!,
+                            ref: ref);
+                  },
                 ),
         ],
       ),
@@ -82,35 +97,5 @@ class _AddQrViewState extends ConsumerState<AddQrView> {
   void dispose() {
     nameController.dispose();
     super.dispose();
-  }
-
-  void _saveQrcode() {
-    final name = nameController.text;
-    final image = _selectedImage;
-    if (name.isEmpty || image == null) {
-      return;
-    }
-    final newQr = Qrcode(
-      name: name,
-      imagePath: image.path,
-    );
-    ref.read(User.userFriendProvider.notifier).addQrcode(widget.user, newQr);
-    Navigator.of(context).pop();
-  }
-
-  void _editQrcode() {
-    final name = nameController.text;
-    final image = _selectedImage;
-    if (name.isEmpty || image == null) {
-      return;
-    }
-    final myid = widget.personToEdit!.id;
-    final newQr = Qrcode(
-      id: myid,
-      name: name,
-      imagePath: image.path,
-    );
-    ref.read(User.userFriendProvider.notifier).editQrcode(widget.user, newQr);
-    Navigator.of(context).pop();
   }
 }
