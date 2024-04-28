@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_group/src/data/models/group.dart';
 import 'package:qr_group/src/data/models/user.dart';
+import 'package:qr_group/src/modules/groups/insert_friend/insertfriend_viewmodel.dart';
 
 class InsertFriendView extends ConsumerStatefulWidget {
   final Group groupedit;
@@ -17,11 +18,8 @@ class _InsertFriendViewState extends ConsumerState<InsertFriendView> {
   @override
   void initState() {
     super.initState();
-    if (widget.groupedit.listpeople.isNotEmpty) {
-      for (var person in widget.groupedit.listpeople) {
-        selectedStatus[person.id] = true;
-      }
-    }
+    InsertFriendViewModel.markPeopleAsSelected(
+        selectedStatus: selectedStatus, groupedit: widget.groupedit);
   }
 
   @override
@@ -34,7 +32,14 @@ class _InsertFriendViewState extends ConsumerState<InsertFriendView> {
           IconButton(
             icon: const Icon(Icons.save),
             iconSize: 30,
-            onPressed: _saveGroup,
+            onPressed: () {
+              InsertFriendViewModel.saveGroup(
+                ref: ref,
+                selectedStatus: selectedStatus,
+                context: context,
+                groupedit: widget.groupedit,
+              );
+            },
           ),
         ],
       ),
@@ -68,19 +73,5 @@ class _InsertFriendViewState extends ConsumerState<InsertFriendView> {
               ),
             ),
     );
-  }
-
-  void _saveGroup() {
-    final groupNotifier = ref.read(Group.groupProvider.notifier);
-    final listfriend = ref.watch(User.userFriendProvider);
-    final selectedPeople = listfriend
-        .where((person) => selectedStatus[person.id] ?? false)
-        .map((person) => person)
-        .toList();
-    groupNotifier.addUserInGroup(
-      widget.groupedit.id,
-      selectedPeople,
-    );
-    Navigator.of(context).pop();
   }
 }
