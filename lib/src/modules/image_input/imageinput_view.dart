@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:qr_group/src/modules/image_input/imageinput_viewmodel.dart';
 
 class ImageInput extends StatefulWidget {
   final File? oldImage;
@@ -20,14 +21,29 @@ class ImageInput extends StatefulWidget {
 
 class _ImageInputState extends State<ImageInput> {
   File? _image;
-  late ImagePicker _picker;
+  bool _isPickingImage = false;
+
+  Future<void> _chooseImage(ImageSource source) async {
+    if (_isPickingImage) return;
+    _isPickingImage = true;
+    try {
+      _image = await ImageInputViewModel.chooseImage(source);
+      if (_image != null) {
+        setState(() {});
+        widget.onPickImage(_image!);
+      }
+    } finally {
+      _isPickingImage = false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Container(
           width: double.infinity,
-          height: 400,
+          height: 465,
           alignment: Alignment.center,
           decoration: BoxDecoration(
               border: Border.all(
@@ -38,37 +54,31 @@ class _ImageInputState extends State<ImageInput> {
               ? Text(
                   "No chosen QR code",
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                        color: Theme.of(context).colorScheme.onBackground,
-                      ),
+                  style: Theme.of(context).textTheme.bodyLarge,
                 )
               : Image.file(
                   _image!,
-                  scale: 1.0,
                   fit: BoxFit.fill,
                   width: double.infinity,
-                  height: double.infinity,
                 ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            widget.isEdit
-                ? const SizedBox()
-                : TextButton.icon(
-                    onPressed: _chooseImage,
-                    icon: const Icon(Icons.photo_outlined),
-                    label: const Text("Open Gallery"),
-                  ),
-            widget.isEdit
-                ? const SizedBox()
-                : TextButton.icon(
-                    onPressed: _takePhoto,
-                    icon: const Icon(Icons.camera_alt_outlined),
-                    label: const Text("Open camera"),
-                  ),
+            if (!widget.isEdit)
+              TextButton.icon(
+                onPressed: () => _chooseImage(ImageSource.gallery),
+                icon: const Icon(Icons.photo_outlined),
+                label: const Text("Open Gallery"),
+              ),
+            if (!widget.isEdit)
+              TextButton.icon(
+                onPressed: () => _chooseImage(ImageSource.camera),
+                icon: const Icon(Icons.camera_alt_outlined),
+                label: const Text("Open camera"),
+              ),
           ],
-        )
+        ),
       ],
     );
   }
@@ -76,27 +86,6 @@ class _ImageInputState extends State<ImageInput> {
   @override
   void initState() {
     super.initState();
-    _picker = ImagePicker();
     _image = widget.oldImage;
-  }
-
-  void _chooseImage() async {
-    XFile? selectedImage = await _picker.pickImage(source: ImageSource.gallery);
-    if (selectedImage != null) {
-      setState(() {
-        _image = File(selectedImage.path);
-      });
-    }
-    widget.onPickImage(_image!);
-  }
-
-  void _takePhoto() async {
-    XFile? selectedImage = await _picker.pickImage(source: ImageSource.camera);
-    if (selectedImage != null) {
-      setState(() {
-        _image = File(selectedImage.path);
-      });
-    }
-    widget.onPickImage(_image!);
   }
 }
