@@ -4,10 +4,7 @@ import 'package:qr_group/src/common/components/confirm_delete.dart';
 import 'package:qr_group/src/common/components/edit_name_dialog.dart';
 import 'package:qr_group/src/common/components/main_drawer.dart';
 import 'package:qr_group/src/data/models/group.dart';
-import 'package:qr_group/src/data/models/user.dart';
-import 'package:qr_group/src/modules/friends/show_friend/showfriend_view.dart';
-import 'package:qr_group/src/modules/groups/add_group/addgroup_view.dart';
-import 'package:qr_group/src/modules/groups/insert_friend/insertfriend_view.dart';
+import 'package:qr_group/src/modules/groups/show_group/showgroup_viewmodel.dart';
 
 class ShowGroupView extends ConsumerStatefulWidget {
   const ShowGroupView({
@@ -22,17 +19,13 @@ class ShowGroupView extends ConsumerStatefulWidget {
 class _ShowGroupViewState extends ConsumerState<ShowGroupView> {
   @override
   Widget build(BuildContext context) {
-    ref.watch(User.userFriendProvider);
     final groupList = ref.watch(Group.groupProvider);
 
     return Scaffold(
       drawer: MainDrawer(
         onSelectScreen: (String identifier) {
-          Navigator.of(context).pop();
-          if (identifier == 'friends') {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (ctx) => const ShowFriendsView()));
-          }
+          ShowGroupViewModel.onSelectScreen(
+              ref: ref, identifier: identifier, context: context);
         },
       ),
       appBar: AppBar(
@@ -42,11 +35,7 @@ class _ShowGroupViewState extends ConsumerState<ShowGroupView> {
             icon: const Icon(Icons.add_circle_outline),
             iconSize: 30,
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (ctx) => const AddGroupView(),
-                ),
-              );
+              ShowGroupViewModel.navigateToAddGroupView(context);
             },
           ),
         ],
@@ -66,7 +55,6 @@ class _ShowGroupViewState extends ConsumerState<ShowGroupView> {
                 final group = groupList[index];
                 final groupName = group.name;
                 final peopleCount = group.listpeople.length;
-
                 return Padding(
                   padding: const EdgeInsets.all(8),
                   child: Container(
@@ -103,11 +91,9 @@ class _ShowGroupViewState extends ConsumerState<ShowGroupView> {
                             IconButton(
                               icon: const Icon(Icons.person_rounded),
                               onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (ctx) =>
-                                        InsertFriendView(groupedit: group),
-                                  ),
+                                ShowGroupViewModel.navigateToInsertFriendView(
+                                  context: context,
+                                  group: group,
                                 );
                               },
                             ),
@@ -117,36 +103,36 @@ class _ShowGroupViewState extends ConsumerState<ShowGroupView> {
                               title: "Edit Group Name",
                               labelText: "New Group Name",
                               onSave: (ref, group, newName) {
-                                ref
-                                    .read(Group.groupProvider.notifier)
-                                    .editNameGroup(
-                                      group.id,
-                                      newName,
-                                    );
+                                ShowGroupViewModel.onSaveEditName(
+                                  context: context,
+                                  group: group,
+                                  newName: newName,
+                                  ref: ref,
+                                );
                               },
                             ),
                             ConfirmDeleteButton(
-                                context: context,
-                                ref: ref,
-                                dialogTitle: "Delete Group",
-                                dialogContent:
-                                    "Are you sure you want to delete this Group?",
-                                onDelete: () {
-                                  ref
-                                      .read(Group.groupProvider.notifier)
-                                      .deleteGroup(group.id);
-                                }),
+                              context: context,
+                              ref: ref,
+                              dialogTitle: "Delete Group",
+                              dialogContent:
+                                  "Are you sure you want to delete this Group?",
+                              onDelete: () {
+                                ShowGroupViewModel.onDeleteGroup(
+                                  context: context,
+                                  group: group,
+                                  ref: ref,
+                                );
+                              },
+                            ),
                           ],
                         ),
                       ),
                       onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (ctx) => ShowFriendsView(
-                              isGroup: true,
-                              groupId: group.id,
-                            ),
-                          ),
+                        ShowGroupViewModel.navigateToShowFriendsView(
+                          context: context,
+                          isGroup: true,
+                          groupId: group.id,
                         );
                       },
                     ),
