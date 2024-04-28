@@ -54,7 +54,9 @@ class _ImageInputState extends State<ImageInput> {
               ? Text(
                   "No chosen QR code",
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyLarge,
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: Theme.of(context).colorScheme.onBackground,
+                      ),
                 )
               : Image.file(
                   _image!,

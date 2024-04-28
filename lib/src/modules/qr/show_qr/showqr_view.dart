@@ -21,7 +21,7 @@ class ShowQrView extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Container(
               width: double.infinity,
-              height: 400,
+              height: 465,
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 border: Border.all(

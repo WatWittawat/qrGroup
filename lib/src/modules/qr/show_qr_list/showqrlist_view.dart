@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_group/src/data/models/user.dart';
-import 'package:qr_group/src/modules/qr/add_qr/addqr_view.dart';
-import 'package:qr_group/src/modules/qr/show_qr/showqr_view.dart';
+import 'package:qr_group/src/modules/qr/show_qr_list/showqrlist_viewmodel.dart';
 
 class ShowQrList extends ConsumerStatefulWidget {
   final User user;
@@ -28,10 +27,9 @@ class _ShowQrListScreen extends ConsumerState<ShowQrList> {
                     size: 30,
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (ctx) => AddQrView(user: widget.user),
-                      ),
+                    ShowQrListViewModel.navigateToAddQr(
+                      context: context,
+                      user: widget.user,
                     );
                   },
                 ),
@@ -90,13 +88,10 @@ class _ShowQrListScreen extends ConsumerState<ShowQrList> {
                                     : IconButton(
                                         icon: const Icon(Icons.edit),
                                         onPressed: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                                builder: (ctx) => AddQrView(
-                                                      user: widget.user,
-                                                      personToEdit:
-                                                          qrCodes[index],
-                                                    )),
+                                          ShowQrListViewModel.navigateToAddQr(
+                                            context: context,
+                                            user: widget.user,
+                                            personToEdit: qrCodes[index],
                                           );
                                         },
                                       ),
@@ -105,21 +100,23 @@ class _ShowQrListScreen extends ConsumerState<ShowQrList> {
                                     : IconButton(
                                         icon: const Icon(Icons.delete),
                                         onPressed: () {
-                                          ref
-                                              .read(User
-                                                  .userFriendProvider.notifier)
-                                              .deleteQrcode(
-                                                  widget.user, qrCodes[index]);
-                                        }),
+                                          ShowQrListViewModel.deleteQrCode(
+                                            context: context,
+                                            user: widget.user,
+                                            qrCodes: qrCodes,
+                                            qrCode: qrCodes[index],
+                                            ref: ref,
+                                          );
+                                        },
+                                      ),
                               ],
                             ),
                           ),
                           onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (ctx) =>
-                                    ShowQrView(qrcodeDetails: qrCodes[index]),
-                              ),
+                            ShowQrListViewModel.navigateToShowQrView(
+                              context: context,
+                              qrCodes: qrCodes[index],
+                              index: index,
                             );
                           },
                         ),
