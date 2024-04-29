@@ -53,8 +53,9 @@ class FriendService implements FriendServiceInterface {
           await groupBox.putAt(i, group);
         }
       }
+      return box.values.toList();
     }
-    return box.values.toList();
+    return [];
   }
 
   @override
@@ -64,8 +65,9 @@ class FriendService implements FriendServiceInterface {
     if (index >= 0) {
       user.qrCodes.add(qrcode);
       await box.putAt(index, user);
+      return box.values.toList();
     }
-    return box.values.toList();
+    return [];
   }
 
   @override
@@ -78,8 +80,9 @@ class FriendService implements FriendServiceInterface {
         return q.id == qrcode.id ? qrcode : q;
       }).toList();
       await box.putAt(index, box.values.toList()[index]);
+      return box.values.toList();
     }
-    return box.values.toList();
+    return [];
   }
 
   @override
@@ -93,7 +96,8 @@ class FriendService implements FriendServiceInterface {
         final group = groupBox.getAt(i);
         group!.listpeople.removeWhere((p) => p.id == user.id);
       }
+      return box.values.toList();
     }
-    return box.values.toList();
+    return [];
   }
 }

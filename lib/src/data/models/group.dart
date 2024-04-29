@@ -12,7 +12,7 @@ const uuid = Uuid();
 @HiveType(typeId: 3)
 class Group {
   @HiveField(0)
-  final String name;
+  String name;
 
   @HiveField(1)
   List<User> listpeople;

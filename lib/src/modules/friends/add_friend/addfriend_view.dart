@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_group/src/modules/friends/add_friend/addfriend_viewmodels.dart';
+import 'package:qr_group/src/modules/friends/add_friend/addfriend_viewmodel.dart';
 
 class AddFriendView extends ConsumerStatefulWidget {
   const AddFriendView({super.key});
