@@ -36,9 +36,9 @@ class _InsertFriendViewState extends ConsumerState<InsertFriendView> {
               InsertFriendViewModel.saveGroup(
                 ref: ref,
                 selectedStatus: selectedStatus,
-                context: context,
                 groupedit: widget.groupedit,
               );
+              Navigator.of(context).pop();
             },
           ),
         ],

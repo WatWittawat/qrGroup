@@ -4,7 +4,6 @@ import 'package:qr_group/src/data/models/group.dart';
 
 class AddGroupViewModel {
   static void addGroup({
-    required BuildContext context,
     required TextEditingController nameGroup,
     required WidgetRef ref,
   }) {
@@ -12,6 +11,5 @@ class AddGroupViewModel {
       return;
     }
     ref.read(Group.groupProvider.notifier).addGroup(nameGroup.text);
-    Navigator.of(context).pop();
   }
 }

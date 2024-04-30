@@ -4,7 +4,10 @@ import 'package:qr_group/src/common/components/confirm_delete.dart';
 import 'package:qr_group/src/common/components/edit_name_dialog.dart';
 import 'package:qr_group/src/common/components/main_drawer.dart';
 import 'package:qr_group/src/data/models/user.dart';
+import 'package:qr_group/src/modules/friends/add_friend/addfriend_view.dart';
 import 'package:qr_group/src/modules/friends/show_friend/showfriend_viewmodel.dart';
+import 'package:qr_group/src/modules/groups/show_group/showgroup_view.dart';
+import 'package:qr_group/src/modules/qr/show_qr_list/showqrlist_view.dart';
 
 class ShowFriendsView extends ConsumerStatefulWidget {
   final bool isGroup;
@@ -33,11 +36,14 @@ class _ShowFriendsViewState extends ConsumerState<ShowFriendsView> {
     return Scaffold(
       drawer: widget.isGroup
           ? null
-          : MainDrawer(
-              onSelectScreen: (identifier) => ShowFriendViewModel.selectScreen(
-                    identifier: identifier,
-                    context: context,
-                  )),
+          : MainDrawer(onSelectScreen: (identifier) {
+              Navigator.of(context).pop();
+              if (identifier == 'groups') {
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (ctx) => const ShowGroupView()),
+                );
+              }
+            }),
       appBar: AppBar(
         title: widget.isGroup
             ? const Text("User in Group")
@@ -51,7 +57,10 @@ class _ShowFriendsViewState extends ConsumerState<ShowFriendsView> {
                     size: 30,
                   ),
                   onPressed: () {
-                    ShowFriendViewModel.navigatetoAddFriend(context: context);
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (ctx) => const AddFriendView()),
+                    );
                   },
                 ),
         ],
@@ -132,10 +141,13 @@ class _ShowFriendsViewState extends ConsumerState<ShowFriendsView> {
                         ),
                       ),
                       onTap: () {
-                        ShowFriendViewModel.navigateShowQrList(
-                          context: context,
-                          user: matchingUsers[index],
-                          isGroup: widget.isGroup,
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (ctx) => ShowQrList(
+                              user: matchingUsers[index],
+                              isGroup: widget.isGroup,
+                            ),
+                          ),
                         );
                       },
                     ),
