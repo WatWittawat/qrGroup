@@ -4,6 +4,9 @@ import 'package:qr_group/src/common/components/confirm_delete.dart';
 import 'package:qr_group/src/common/components/edit_name_dialog.dart';
 import 'package:qr_group/src/common/components/main_drawer.dart';
 import 'package:qr_group/src/data/models/group.dart';
+import 'package:qr_group/src/modules/friends/show_friend/showfriend_view.dart';
+import 'package:qr_group/src/modules/groups/add_group/addgroup_view.dart';
+import 'package:qr_group/src/modules/groups/insert_friend/insertfriend_view.dart';
 import 'package:qr_group/src/modules/groups/show_group/showgroup_viewmodel.dart';
 
 class ShowGroupView extends ConsumerStatefulWidget {
@@ -24,8 +27,12 @@ class _ShowGroupViewState extends ConsumerState<ShowGroupView> {
     return Scaffold(
       drawer: MainDrawer(
         onSelectScreen: (String identifier) {
-          ShowGroupViewModel.onSelectScreen(
-              ref: ref, identifier: identifier, context: context);
+          Navigator.of(context).pop();
+          if (identifier == 'friends') {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (ctx) => const ShowFriendsView()),
+            );
+          }
         },
       ),
       appBar: AppBar(
@@ -35,7 +42,11 @@ class _ShowGroupViewState extends ConsumerState<ShowGroupView> {
             icon: const Icon(Icons.add_circle_outline),
             iconSize: 30,
             onPressed: () {
-              ShowGroupViewModel.navigateToAddGroupView(context);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (ctx) => const AddGroupView(),
+                ),
+              );
             },
           ),
         ],
@@ -91,9 +102,12 @@ class _ShowGroupViewState extends ConsumerState<ShowGroupView> {
                             IconButton(
                               icon: const Icon(Icons.person_rounded),
                               onPressed: () {
-                                ShowGroupViewModel.navigateToInsertFriendView(
-                                  context: context,
-                                  group: group,
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (ctx) => InsertFriendView(
+                                      groupedit: group,
+                                    ),
+                                  ),
                                 );
                               },
                             ),
@@ -104,7 +118,6 @@ class _ShowGroupViewState extends ConsumerState<ShowGroupView> {
                               labelText: "New Group Name",
                               onSave: (ref, group, newName) {
                                 ShowGroupViewModel.onSaveEditName(
-                                  context: context,
                                   group: group,
                                   newName: newName,
                                   ref: ref,
@@ -119,7 +132,6 @@ class _ShowGroupViewState extends ConsumerState<ShowGroupView> {
                                   "Are you sure you want to delete this Group?",
                               onDelete: () {
                                 ShowGroupViewModel.onDeleteGroup(
-                                  context: context,
                                   group: group,
                                   ref: ref,
                                 );
@@ -129,10 +141,13 @@ class _ShowGroupViewState extends ConsumerState<ShowGroupView> {
                         ),
                       ),
                       onTap: () {
-                        ShowGroupViewModel.navigateToShowFriendsView(
-                          context: context,
-                          isGroup: true,
-                          groupId: group.id,
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (ctx) => ShowFriendsView(
+                              isGroup: true,
+                              groupId: group.id,
+                            ),
+                          ),
                         );
                       },
                     ),

@@ -6,7 +6,6 @@ import 'package:qr_group/src/data/models/user.dart';
 
 class AddQrViewModel {
   static void saveQrcode({
-    required BuildContext context,
     required TextEditingController nameController,
     required File? selectedImage,
     required User user,
@@ -22,11 +21,9 @@ class AddQrViewModel {
       imagePath: image.path,
     );
     ref.read(User.userFriendProvider.notifier).addQrcode(user, newQr);
-    Navigator.of(context).pop();
   }
 
   static void editQrcode({
-    required BuildContext context,
     required TextEditingController nameController,
     required File? selectedImage,
     required User user,
@@ -45,6 +42,5 @@ class AddQrViewModel {
       imagePath: image.path,
     );
     ref.read(User.userFriendProvider.notifier).editQrcode(user, newQr);
-    Navigator.of(context).pop();
   }
 }

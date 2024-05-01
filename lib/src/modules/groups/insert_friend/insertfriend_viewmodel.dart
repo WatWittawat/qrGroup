@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr_group/src/data/models/group.dart';
 import 'package:qr_group/src/data/models/user.dart';
@@ -18,7 +17,6 @@ class InsertFriendViewModel {
   static void saveGroup({
     required WidgetRef ref,
     required Map<String, bool> selectedStatus,
-    required BuildContext context,
     required Group groupedit,
   }) {
     final groupNotifier = ref.read(Group.groupProvider.notifier);
@@ -31,6 +29,5 @@ class InsertFriendViewModel {
       groupedit.id,
       selectedPeople,
     );
-    Navigator.of(context).pop();
   }
 }

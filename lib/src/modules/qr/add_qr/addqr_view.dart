@@ -45,21 +45,24 @@ class _AddQrViewState extends ConsumerState<AddQrView> {
                   iconSize: 30,
                   onPressed: () {
                     widget.personToEdit == null
-                        ? AddQrViewModel.saveQrcode(
-                            context: context,
-                            nameController: nameController,
-                            selectedImage: _selectedImage,
-                            user: widget.user,
-                            ref: ref)
-                        : AddQrViewModel.editQrcode(
-                            context: context,
-                            nameController: nameController,
-                            selectedImage: _selectedImage,
-                            user: widget.user,
-                            personToEdit: widget.personToEdit!,
-                            ref: ref);
-                  },
-                ),
+                        ? {
+                            AddQrViewModel.saveQrcode(
+                                nameController: nameController,
+                                selectedImage: _selectedImage,
+                                user: widget.user,
+                                ref: ref),
+                            Navigator.of(context).pop(),
+                          }
+                        : {
+                            AddQrViewModel.editQrcode(
+                                nameController: nameController,
+                                selectedImage: _selectedImage,
+                                user: widget.user,
+                                personToEdit: widget.personToEdit!,
+                                ref: ref),
+                            Navigator.of(context).pop()
+                          };
+                  }),
         ],
       ),
       body: SingleChildScrollView(

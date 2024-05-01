@@ -23,10 +23,10 @@ class _AddGroupViewState extends ConsumerState<AddGroupView> {
             iconSize: 30,
             onPressed: () {
               AddGroupViewModel.addGroup(
-                context: context,
                 nameGroup: nameGroup,
                 ref: ref,
               );
+              Navigator.of(context).pop();
             },
           ),
         ],

@@ -88,16 +88,10 @@ class FriendService implements FriendServiceInterface {
   @override
   Future<List<User>> deleteQrcode(User user, Qrcode qrcode) async {
     final box = await Hive.openBox<User>(nameuserBox);
-    final groupBox = Hive.box<Group>(namegroupBox);
     final index = box.values.toList().indexWhere((u) => u.id == user.id);
     if (index >= 0) {
-      await box.deleteAt(index);
-      for (int i = 0; i < groupBox.length; i++) {
-        final group = groupBox.getAt(i);
-        group!.listpeople.removeWhere((p) => p.id == user.id);
-      }
-      return box.values.toList();
+      box.values.toList()[index].qrCodes.removeWhere((q) => q.id == qrcode.id);
     }
-    return [];
+    return box.values.toList();
   }
 }

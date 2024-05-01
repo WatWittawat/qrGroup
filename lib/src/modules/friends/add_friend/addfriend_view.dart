@@ -20,9 +20,9 @@ class _AddFriedScreenViewState extends ConsumerState<AddFriendView> {
               onPressed: () {
                 AddFriendViewModel.saveUser(
                   nameController: nameController,
-                  context: context,
                   ref: ref,
                 );
+                Navigator.of(context).pop();
               }),
         ],
       ),

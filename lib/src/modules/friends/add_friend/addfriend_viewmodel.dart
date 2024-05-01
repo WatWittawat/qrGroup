@@ -4,7 +4,6 @@ import 'package:qr_group/src/data/models/user.dart';
 
 class AddFriendViewModel {
   static void saveUser({
-    required BuildContext context,
     required WidgetRef ref,
     required TextEditingController nameController,
   }) {
@@ -13,6 +12,5 @@ class AddFriendViewModel {
       return;
     }
     ref.read(User.userFriendProvider.notifier).addUser(name);
-    Navigator.of(context).pop();
   }
 }
