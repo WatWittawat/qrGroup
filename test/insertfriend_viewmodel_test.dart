@@ -10,30 +10,28 @@ class MockWidgetRef extends Mock implements WidgetRef {}
 class MockGroupNotifier extends Mock implements GroupNotifier {}
 
 void main() {
+  late MockWidgetRef mockRef;
+  late MockGroupNotifier mockGroupNotifier;
+  late List<User> sampleUsers;
+
+  setUp(() {
+    mockRef = MockWidgetRef();
+    mockGroupNotifier = MockGroupNotifier();
+
+    sampleUsers = [
+      User(id: '1', name: 'User One'),
+      User(id: '2', name: 'User Two'),
+      User(id: '3', name: 'User Three'),
+    ];
+
+    when(() => mockRef.read(User.userFriendProvider)).thenReturn(sampleUsers);
+    when(() => mockRef.read(Group.groupProvider.notifier))
+        .thenReturn(mockGroupNotifier);
+    when(() => mockRef.watch(User.userFriendProvider)).thenReturn(sampleUsers);
+    when(() => mockGroupNotifier.addUserInGroup(any(), any()))
+        .thenAnswer((_) async {});
+  });
   group('InsertFriendViewModel Tests', () {
-    late MockWidgetRef mockRef;
-    late MockGroupNotifier mockGroupNotifier;
-    late List<User> sampleUsers;
-
-    setUp(() {
-      mockRef = MockWidgetRef();
-      mockGroupNotifier = MockGroupNotifier();
-
-      sampleUsers = [
-        User(id: '1', name: 'User One'),
-        User(id: '2', name: 'User Two'),
-        User(id: '3', name: 'User Three'),
-      ];
-
-      when(() => mockRef.read(User.userFriendProvider)).thenReturn(sampleUsers);
-      when(() => mockRef.read(Group.groupProvider.notifier))
-          .thenReturn(mockGroupNotifier);
-      when(() => mockRef.watch(User.userFriendProvider))
-          .thenReturn(sampleUsers);
-      when(() => mockGroupNotifier.addUserInGroup(any(), any()))
-          .thenAnswer((_) async {});
-    });
-
     test('markPeopleAsSelected marks existing group people as selected', () {
       final groupEdit = Group(
           id: '101',

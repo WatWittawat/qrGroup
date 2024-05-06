@@ -39,7 +39,7 @@ void main() {
     mockUserFriendNotifier = MockUserFriendNotifier();
   });
 
-  group('AddQrViewModel', () {
+  group('AddQrViewModel Test', () {
     test('should call addQrcode when name and image are not null', () {
       when(() => mockNameController.text).thenReturn('test');
       when(() => mockSelectedImage.path).thenReturn('path/to/image');

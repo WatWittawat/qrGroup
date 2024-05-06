@@ -25,7 +25,7 @@ void main() {
     userFriendProvider = MockUserFriendProvider();
   });
 
-  group('ShowQrListViewModel', () {
+  group('ShowQrListViewModel Test', () {
     test('deleteQrCode', () {
       when(() => ref.read(User.userFriendProvider.notifier))
           .thenReturn(userFriendProvider);
