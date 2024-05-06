@@ -12,20 +12,20 @@ class MockTextEditingController extends Mock implements TextEditingController {}
 class MockUserNotifier extends Mock implements UserFriendNotifier {}
 
 void main() {
-  group('AddFriendViewModel Tests', () {
-    late MockWidgetRef mockRef;
-    late MockTextEditingController mockNameController;
-    late MockUserNotifier mockUserNotifier;
+  late MockWidgetRef mockRef;
+  late MockTextEditingController mockNameController;
+  late MockUserNotifier mockUserNotifier;
 
-    setUp(() {
-      mockRef = MockWidgetRef();
-      mockNameController = MockTextEditingController();
-      mockUserNotifier = MockUserNotifier();
-      when(() => mockNameController.text).thenReturn('');
-      when(() => mockRef.read(User.userFriendProvider.notifier))
-          .thenReturn(mockUserNotifier);
-    });
+  setUp(() {
+    mockRef = MockWidgetRef();
+    mockNameController = MockTextEditingController();
+    mockUserNotifier = MockUserNotifier();
+    when(() => mockNameController.text).thenReturn('');
+    when(() => mockRef.read(User.userFriendProvider.notifier))
+        .thenReturn(mockUserNotifier);
+  });
 
+  group('AddFriendViewModel Test', () {
     test('Does not add user if name is empty', () {
       AddFriendViewModel.saveUser(
         ref: mockRef,

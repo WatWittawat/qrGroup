@@ -10,37 +10,35 @@ class MockWidgetRef extends Mock implements WidgetRef {}
 class MockUserNotifier extends Mock implements UserFriendNotifier {}
 
 void main() {
-  group("ShowFriend ViewModel Tests", () {
-    late MockWidgetRef mockRef;
-    late MockUserNotifier mockUserNotifier;
+  late MockWidgetRef mockRef;
+  late MockUserNotifier mockUserNotifier;
 
-    setUp(() {
-      mockRef = MockWidgetRef();
-      mockUserNotifier = MockUserNotifier();
-      final sampleUsers = [
-        User(id: "1", name: "User One"),
-        User(id: "2", name: "User Two"),
-      ];
+  setUp(() {
+    mockRef = MockWidgetRef();
+    mockUserNotifier = MockUserNotifier();
+    final sampleUsers = [
+      User(id: "1", name: "User One"),
+      User(id: "2", name: "User Two"),
+    ];
 
-      final sampleGroups = [
-        Group(
-            id: '101',
-            name: "Test01",
-            listpeople: [User(id: '1', name: 'User One')]),
-        Group(
-          id: '102',
-          name: "Test02",
-          listpeople: [],
-        ),
-      ];
+    final sampleGroups = [
+      Group(
+          id: '101',
+          name: "Test01",
+          listpeople: [User(id: '1', name: 'User One')]),
+      Group(
+        id: '102',
+        name: "Test02",
+        listpeople: [],
+      ),
+    ];
 
-      when(() => mockRef.watch(User.userFriendProvider))
-          .thenReturn(sampleUsers);
-      when(() => mockRef.watch(Group.groupProvider)).thenReturn(sampleGroups);
-      when(() => mockRef.read(User.userFriendProvider.notifier))
-          .thenReturn(mockUserNotifier);
-    });
-
+    when(() => mockRef.watch(User.userFriendProvider)).thenReturn(sampleUsers);
+    when(() => mockRef.watch(Group.groupProvider)).thenReturn(sampleGroups);
+    when(() => mockRef.read(User.userFriendProvider.notifier))
+        .thenReturn(mockUserNotifier);
+  });
+  group("ShowFriend ViewModel Test", () {
     test('getMatchingUsers returns correct users for group', () {
       final viewModel = ShowFriendViewModel();
       final matchingUsers = viewModel.getMatchingUsers(

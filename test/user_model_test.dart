@@ -11,7 +11,7 @@ void main() {
     friendService = MockFriendService();
   });
 
-  group("FriendService Check Call", () {
+  group("FriendService Check Call Test", () {
     test('loadGroup calls FriendService.loadGroup', () async {
       when(() => friendService.loadUser()).thenAnswer((_) async => []);
       await friendService.loadUser();

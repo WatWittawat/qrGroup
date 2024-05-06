@@ -10,7 +10,7 @@ void main() {
     groupService = MockGroupService();
   });
 
-  group("GroupService Check Call", () {
+  group("GroupService Check Call Test", () {
     test('loadGroup calls GroupService.loadGroup', () async {
       when(() => groupService.loadGroup()).thenAnswer((_) async => []);
       await groupService.loadGroup();
