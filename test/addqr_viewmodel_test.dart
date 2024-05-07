@@ -53,7 +53,7 @@ void main() {
         ref: mockRef,
       );
 
-      verify(() => mockUserFriendNotifier.addQrcode(any(), any())).called(1);
+      verify(() => mockUserFriendNotifier.addQrcode(mockUser, any())).called(1);
     });
 
     test('should not call addQrcode when name is empty', () {
@@ -68,7 +68,7 @@ void main() {
         ref: mockRef,
       );
 
-      verifyNever(() => mockUserFriendNotifier.addQrcode(any(), any()));
+      verifyNever(() => mockUserFriendNotifier.addQrcode(mockUser, any()));
     });
 
     test('should not call addQrcode when image is null', () {
@@ -83,15 +83,14 @@ void main() {
         ref: mockRef,
       );
 
-      verifyNever(() => mockUserFriendNotifier.addQrcode(any(), any()));
+      verifyNever(() => mockUserFriendNotifier.addQrcode(mockUser, any()));
     });
 
     test('editQrcode should call editQrcode when name and image are valid', () {
-      final mockPersonToEdit = MockQrcode();
-      when(() => mockPersonToEdit.id).thenReturn("123");
+      final personToEdit = MockQrcode();
       when(() => mockNameController.text).thenReturn('updatedName');
       when(() => mockSelectedImage.path).thenReturn('path/to/new_image');
-
+      when(() => personToEdit.id).thenReturn("123");
       when(() => mockRef.read(User.userFriendProvider.notifier))
           .thenReturn(mockUserFriendNotifier);
 
@@ -99,11 +98,12 @@ void main() {
         nameController: mockNameController,
         selectedImage: mockSelectedImage,
         user: mockUser,
-        personToEdit: mockPersonToEdit,
+        personToEdit: personToEdit,
         ref: mockRef,
       );
 
-      verify(() => mockUserFriendNotifier.editQrcode(any(), any())).called(1);
+      verify(() => mockUserFriendNotifier.editQrcode(mockUser, any()))
+          .called(1);
     });
 
     test('editQrcode should not call editQrcode if name is empty', () {
@@ -122,7 +122,8 @@ void main() {
         ref: mockRef,
       );
 
-      verifyNever(() => mockUserFriendNotifier.editQrcode(any(), any()));
+      verifyNever(
+          () => mockUserFriendNotifier.editQrcode(mockUser, mockPersonToEdit));
     });
 
     test('editQrcode should not call editQrcode if selectedImage is null', () {
@@ -140,7 +141,8 @@ void main() {
         ref: mockRef,
       );
 
-      verifyNever(() => mockUserFriendNotifier.editQrcode(any(), any()));
+      verifyNever(
+          () => mockUserFriendNotifier.editQrcode(mockUser, mockPersonToEdit));
     });
   });
 }
